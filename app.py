@@ -5,11 +5,26 @@ from src.community import community_best_clusters_silhouette
 from flask import jsonify, make_response, request
 from flask import Flask
 from flask_cors import CORS
+import os
 
 app = Flask(__name__)
-app.config.from_object("config.DevConfig")
+# app.config.from_object("config.DevConfig")
 cors = CORS(app)
 
+@app.route('/')
+def hello():
+    """
+    Endpoint padrão
+    """
+    headers = { "Content-Type": "application/json" }
+    body = { "Hello" }
+        
+    return make_response(
+        jsonify(body),
+        200,
+        headers
+    )
+    
 @app.route('/fastgreedy', methods=["POST"])
 def generate_community_fast_greedy():
     """
@@ -116,7 +131,7 @@ def best_cluster_by_silhouette():
 
 if __name__ == '__main__':
     app.run(
-        port=5000,
-        host='0.0.0.0',
-        debug=True
+        debug=True, 
+        host='0.0.0.0', 
+        port=int(os.environ.get('PORT', 8080))
     )
