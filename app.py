@@ -5,7 +5,6 @@ from src.community import community_best_clusters_silhouette
 from flask import jsonify, make_response, request
 from flask import Flask
 from flask_cors import CORS
-import json
 
 app = Flask(__name__)
 app.config.from_object("config.DevConfig")
@@ -64,10 +63,14 @@ def generate_community_kmeans():
         # Obtem dados do body
         request_data = request.get_json()  
         nodes = request_data['nodes']
-        n_cluster = request_data['n_cluster']
+        min_clusters = request_data['min_clusters']
+        max_clusters = request_data['max_clusters']
 
-        # Obtem os clusters
-        clusters, labels = community_detection_kmeans(nodes, n_cluster)
+        # Obtem a melhor quantidade de clusters
+        best_cluster = community_best_clusters_silhouette(min_clusters, max_clusters, nodes)
+
+        # Clusteriza os nós
+        clusters, labels = community_detection_kmeans(nodes, best_cluster)
         message = { 
             "clusters":  [int(elem) for elem in clusters],
             "labels": labels,

@@ -2,6 +2,7 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 import igraph as ig
 import pandas as pd
+import math
 
 """
 Detecta as comunidades em um grafo por fastgreedy
@@ -46,7 +47,12 @@ def community_detection_kmeans(nodes: list, n_cluster: int):
 """
 Calcula a melhor quantidade de comunidades em um grafo por KMeans
 """ 
-def community_best_clusters_silhouette(min_cluster: int, max_cluster: int, nodes: list) -> int:
+def community_best_clusters_silhouette(
+    min_cluster: int, 
+    max_cluster: int, 
+    nodes: list
+) -> int:
+
     silhouette = []
 
     # Constroi dataframe
@@ -64,12 +70,13 @@ def community_best_clusters_silhouette(min_cluster: int, max_cluster: int, nodes
         silhouette.append({
             'x': cluster, 
             'y': silhouette_score(
-              df.loc[:, cols].values, 
-              kmeans.labels_
+                df.loc[:, cols].values, 
+                kmeans.labels_
             )
         })
     
     # Obtem o melhor cluster atraves do metodo da silhueta
-    best_cluster = sorted(silhouette, key=lambda x: x['y'], reverse=True)[0]['y']
-    
+    silhouette = sorted(silhouette, key=lambda x: x['y'], reverse=True)
+    best_cluster = math.ceil(sum([i['x'] for i in silhouette[0:5]]) / 5)
+
     return best_cluster
