@@ -1,3 +1,4 @@
+from email import header
 from src.graph  import construct_graph, extract_graph
 from src.community import community_detection_fast_greedy
 from src.community import community_detection_kmeans
@@ -8,7 +9,7 @@ from flask_cors import CORS
 import os
 
 app = Flask(__name__)
-# app.config.from_object("config.DevConfig")
+app.config.from_object("config.ProdConfig")
 cors = CORS(app)
 
 @app.route('/')
@@ -17,7 +18,7 @@ def hello():
     Endpoint padrão
     """
     headers = { "Content-Type": "application/json" }
-    body = { "Hello" }
+    body = { "teste": "Hello" }
         
     return make_response(
         jsonify(body),
@@ -133,5 +134,5 @@ if __name__ == '__main__':
     app.run(
         debug=True, 
         host='0.0.0.0', 
-        port=int(os.environ.get('PORT', 8080))
+        port=8000
     )
