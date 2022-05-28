@@ -1,4 +1,3 @@
-from email import header
 from src.graph  import construct_graph, extract_graph
 from src.community import community_detection_fast_greedy
 from src.community import community_detection_kmeans
@@ -6,7 +5,6 @@ from src.community import community_best_clusters_silhouette
 from flask import jsonify, make_response, request
 from flask import Flask
 from flask_cors import CORS
-import os
 
 app = Flask(__name__)
 app.config.from_object("config.ProdConfig")
